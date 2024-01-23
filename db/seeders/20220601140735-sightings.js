@@ -6,7 +6,7 @@ module.exports = {
       "sightings",
       [
         {
-          date: new Date(1990, 9),
+          date: new Date(1990, 9).toISOString().slice(0, 10),
           location: "East side of Prince William Sound, Alaska, USA",
           notes:
             "Ed L. was salmon fishing with a companion in Prince William Sound. After anchoring off shore, his companion took a small boat up a river to check on the state of the salmon run. As the day wore on toward evening and he didn't come back at the expected time, Ed scanned upriver and across the adjacent land with binoculars. There he saw a sasquatch walking across the tundra, with long, smooth steps and with dark hair flowing from its shoulders, bouncing behind \"like a cape\" at every step. The sasquatch paid no attention to the boat (distance about 1,000').",
