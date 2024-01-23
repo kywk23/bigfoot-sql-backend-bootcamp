@@ -25,7 +25,7 @@ class SightingsController extends BaseController {
         location: location,
         notes: notes,
       });
-      // Respond with new sighting
+
       return res.json(newSighting);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err });
@@ -35,16 +35,35 @@ class SightingsController extends BaseController {
   async deleteOne(req, res) {
     const { sightingId } = req.params;
     try {
-      // Use sightingId in your delete operation
       const deleteSighting = await this.model.destroy({
         where: {
           id: sightingId,
         },
       });
-      // Respond with new sighting
       return res.json(deleteSighting);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err });
+    }
+  }
+
+  async editOne(req, res) {
+    const { sightingId } = req.params;
+    const { location, notes } = req.body;
+    try {
+      const editSighting = await this.model.update(
+        {
+          location: location,
+          notes: notes,
+        },
+        {
+          where: {
+            id: sightingId,
+          },
+        }
+      );
+      return res.json({ updatedRows: editSighting[0] });
+    } catch (err) {
+      return res.status(400).json({ error: true, msg: err.message });
     }
   }
 }
