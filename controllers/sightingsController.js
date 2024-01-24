@@ -25,7 +25,6 @@ class SightingsController extends BaseController {
         location: location,
         notes: notes,
       });
-
       return res.json(newSighting);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err });
@@ -61,7 +60,8 @@ class SightingsController extends BaseController {
           },
         }
       );
-      return res.json({ updatedRows: editSighting[0] });
+      const output = await this.model.findByPk(sightingId);
+      res.json(output);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err.message });
     }

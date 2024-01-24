@@ -1,19 +1,18 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Sighting extends Model {
+  // Naming of class needs Caps ? - yes need
+  class Comment extends Model {
     /**
      * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
+     * This method is not a part of DataTypes lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      //reference to models. *class name*
-      this.hasMany(models.comment);
+      this.belongsTo(models.sighting);
     }
   }
-  Sighting.init(
-    // good practice to follow Migrations. cameCase
+  Comment.init(
     {
       id: {
         allowNull: false,
@@ -21,31 +20,33 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      date: {
-        type: DataTypes.DATE,
-      },
-      location: {
+      content: {
         type: DataTypes.STRING,
       },
-      notes: {
-        type: DataTypes.TEXT,
+      sighting_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          //IS THIS NAME OF CLASS? - This is name of mode(aka table), it runs in order  based on timeline
+          model: "sightings",
+          key: "id",
+        },
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: new Date(),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: DataTypes.DATE,
-        defaultValue: new Date(),
       },
     },
     {
       sequelize,
-      modelName: "sighting",
+      modelName: "comment",
+      // below: is this needed?  - yes
       underscored: true,
     }
   );
-  return Sighting;
+  return Comment;
 };
