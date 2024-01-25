@@ -1,8 +1,9 @@
 const BaseController = require("./baseController");
 
 class SightingsController extends BaseController {
-  constructor(model) {
+  constructor(model, commentModel) {
     super(model);
+    this.commentModel = commentModel;
   }
 
   // Retrieve specific sighting
@@ -61,9 +62,42 @@ class SightingsController extends BaseController {
         }
       );
       const output = await this.model.findByPk(sightingId);
-      res.json(output);
+      return res.json(output);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err.message });
+    }
+  }
+
+  // Gets all comments of a given sighting
+  async getAllComments(req, res) {
+    const { sightingId } = req.params;
+
+    try {
+      const comment = await this.commentModel.findAll({
+        where: {
+          sightingId: sightingId,
+        },
+      });
+      return res.json(comment);
+    } catch (err) {
+      return res.status(400).json({ error: true, msg: err });
+    }
+  }
+
+  async insertOneComment(req, res) {
+    const { sightingId } = req.params;
+    const { content } = req.body;
+
+    try {
+      // Create new sighting
+      const newComment = await this.commentModel.create({
+        sightingId: Number(sightingId),
+        content: content,
+      });
+
+      return res.json(newComment);
+    } catch (err) {
+      return res.status(400).json({ error: true, msg: err });
     }
   }
 }
