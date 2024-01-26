@@ -1,9 +1,10 @@
 const BaseController = require("./baseController");
 
 class SightingsController extends BaseController {
-  constructor(model, commentModel) {
+  constructor(model, commentModel, categoryModel) {
     super(model);
     this.commentModel = commentModel;
+    this.categoryModel = categoryModel;
   }
 
   // Retrieve specific sighting
