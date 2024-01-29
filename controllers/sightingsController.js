@@ -11,15 +11,29 @@ class SightingsController extends BaseController {
   async getOne(req, res) {
     const { sightingId } = req.params;
     try {
-      const sighting = await this.model.findByPk(sightingId);
+      const sighting = await this.model.findByPk(sightingId, {
+        include: this.categoryModel,
+      });
       return res.json(sighting);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err });
     }
   }
 
+  async getAll(req, res) {
+    try {
+      const output = await this.model.findAll({
+        include: this.categoryModel,
+      });
+      return res.json(output);
+    } catch (err) {
+      return res.status(400).json({ error: true, msg: err });
+    }
+  }
+
   async insertOne(req, res) {
-    const { date, location, notes } = req.body;
+    //base on frontend naming convention
+    const { date, location, notes, selectedCategoryId } = req.body;
     try {
       // Create new sighting
       const newSighting = await this.model.create({
@@ -27,6 +41,15 @@ class SightingsController extends BaseController {
         location: location,
         notes: notes,
       });
+      const selectedCategories = await this.categoryModel.findAll({
+        where: {
+          id: selectedCategoryId,
+        },
+      });
+      console.log(selectedCategories);
+      // Associated new sighting with selected categories
+      await newSighting.setCategories(selectedCategories);
+      // Respond with new sighting
       return res.json(newSighting);
     } catch (err) {
       return res.status(400).json({ error: true, msg: err });
@@ -62,6 +85,7 @@ class SightingsController extends BaseController {
           },
         }
       );
+      console.log(`edit is,`, editSighting);
       const output = await this.model.findByPk(sightingId);
       return res.json(output);
     } catch (err) {
